@@ -4,7 +4,7 @@ import uuid
 
 name = sys.argv[1] # name passed from command line argument
 
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(1)
 
 cv2.namedWindow("press space to take a photo", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("press space to take a photo", 500, 300)
@@ -33,8 +33,3 @@ while True:
 cam.release()
 
 cv2.destroyAllWindows()
-
-
-
-# pip uninstall opencv-python
-# ARCHFLAGS="-arch arm64" pip install opencv-python --compile --no-cache-dir

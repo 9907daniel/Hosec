@@ -21,7 +21,7 @@ detector = cv2.CascadeClassifier(cascade)
 
 # initialize the video stream and allow the camera sensor to warm up
 print("[INFO] starting video stream...")
-vs = VideoStream(src=0).start()
+vs = VideoStream(src=1).start()
 #vs = VideoStream(usePiCamera=True).start()
 time.sleep(2.0)
 

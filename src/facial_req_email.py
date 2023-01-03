@@ -8,9 +8,20 @@ import imutils
 import pickle
 import time
 import cv2
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
 import base64
+import json
+
+
+from linebot import (
+    LineBotApi, WebhookHandler
+)
+from linebot.exceptions import (
+    InvalidSignatureError
+)
+from linebot.models import (
+    MessageEvent, TextMessage, TextSendMessage,
+)
+
 
 # initialize 'currentname' to trigger only when a new person is identified
 currentname = "unknown"
@@ -20,25 +31,18 @@ encodingsP = "encodings.pickle"
 cascade = "haarcascade_frontalface_default.xml"
 
 def send_email(name):
-	message = Mail(
-		from_email=os.environ.get('SENDGRID_EMAIL'),
-		to_emails=os.environ.get('RECIPIENT_EMAIL'),
-		subject='You have a visitor: {}'.format(name),
-		html_content='<strong>Your webcame recognizes someone. {} is here.</strong>'.format(name)
-	)
-	with open('image.jpg', 'rb') as f:
-		data = f.read()
-		f.close()
-	encoded_file = base64.b64encode(data).decode()
-	attachedFile = Attachment(
-		FileContent(encoded_file),
-		FileName('image.jpg'),
-		FileType('image/jpg'),
-		Disposition('attachment'))
-	message.attachment = attachedFile
-	sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-	response = sg.send(message)
-	print(response.status_code, response.body, response.headers)
+
+ 
+    file = open('info.json', 'r')
+    info = json.load(file)
+    
+    CHANNEL_ACCESS_TOKEN = info['CHANNEL_ACCESS_TOKEN']
+    line_bot_api = LineBotApi('syzbI/6RGTszSSNfE2tOxIaFlL6BErCJfevtsv0PE9KM7m1XgTy3ORETnW1aZ7Tk2Hu0PdKZM0qhDFnm9swbJkpDPc7qMjvkMymmdlixznEb+qUL2Ef0rn1NHMWcK+M5nonkC7G2ySY7MoEVbbfmBAdB04t89/1O/w1cDnyilFU=')
+
+    USER_ID = info['USER_ID']
+    messages = TextSendMessage(text = f"{name} has entered Home.")
+    line_bot_api.push_message(USER_ID, messages=messages)
+
 
 # load the known faces and embeddings
 print("[INFO] loading encodings + face detector...")
@@ -47,7 +51,7 @@ detector = cv2.CascadeClassifier(cascade)
 
 # initialize the video stream and allow the camera sensor to warm up
 print("[INFO] starting video stream...")
-vs = VideoStream(src=0).start()
+vs = VideoStream(src=1).start()
 # vs = VideoStream(usePiCamera=True).start()
 time.sleep(2.0)
 
@@ -117,7 +121,6 @@ while True:
 				
 				# send an email to announce who is at the door
 				request = send_email(name)
-				print ('Status Code: '+format(request.status_code)) #202 status code means email sent successfully
 		names.append(name)
 
 	# loop over the recognized faces
