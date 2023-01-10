@@ -2,7 +2,7 @@ import cv2
 import sys
 import uuid
 
-name = sys.argv[1] # name passed from command line argument
+name = sys.argv[1] 
 
 cam = cv2.VideoCapture(1)
 
@@ -18,17 +18,15 @@ while True:
 
     k = cv2.waitKey(1)
     if k%256 == 27:
-        # ESC pressed
         print("Escape hit, closing...")
         break
     elif k%256 == 32:
-        # SPACE pressed
         img_name = "dataset/{}/image_{}.jpg".format(name, uuid.uuid4().hex)
         status = cv2.imwrite(img_name, frame)
         if status is True:
             print("{} written!".format(img_name))
         else:
-            print("Image not written. Check person's folder created and passed as command line argument.")
+            print("Image not written.")
 
 cam.release()
 

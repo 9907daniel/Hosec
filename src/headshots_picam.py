@@ -4,7 +4,7 @@ from picamera.array import PiRGBArray
 import sys
 import uuid
 
-name = sys.argv[1] # name passed from command line argument
+name = sys.argv[1]
 
 cam = PiCamera()
 cam.resolution = (512, 304)
@@ -20,16 +20,14 @@ while True:
         k = cv2.waitKey(1)
         rawCapture.truncate(0)
         if k%256 == 27: 
-            # ESC pressed
             break
         elif k%256 == 32:
-            # SPACE pressed
             img_name = "dataset/{}/image_{}.jpg".format(name, uuid.uuid4().hex)
             cv2.imwrite(img_name, image)
             print("{} written!".format(img_name))
             
     if k%256 == 27:
-        print("Escape hit, closing...")
+        print("Escape hit..")
         break
 
 cv2.destroyAllWindows()
