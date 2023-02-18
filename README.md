@@ -43,3 +43,14 @@ python3 encode_faces.py
 ```
 python3 headshots.py
 ```
+
+<br>
+
+6) info.json
+- create info.json file in src directory and insert line channel_access_token & user_id
+```
+{
+    "CHANNEL_ACCESS_TOKEN": "TOKEN_HERE",
+    "USER_ID": "USER_ID HERE"
+}
+```
